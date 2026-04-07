@@ -57,10 +57,12 @@ async function fetchMetricas(negocioId: string): Promise<MetricasOverview> {
     .lte("fecha_hora_inicio", endOfMonth(hoy).toISOString())
     .in("estado", ["completado"]);
 
-  const ingresosMes = (turnosMesData ?? []).reduce(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (sum: number, t: any) =>
-      sum + (t.precio_cobrado ?? t.servicio?.precio ?? 0),
+  // Supabase returns joined rows as arrays; cast through unknown to our local type
+  type TurnoMesRow = { precio_cobrado: number | null; servicio: { precio: number }[] | null };
+
+  const ingresosMes = ((turnosMesData ?? []) as unknown as TurnoMesRow[]).reduce(
+    (sum: number, t: TurnoMesRow) =>
+      sum + (t.precio_cobrado ?? t.servicio?.[0]?.precio ?? 0),
     0
   );
 

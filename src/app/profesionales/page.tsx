@@ -81,7 +81,7 @@ export default function ProfesionalesPage() {
                 <div className="flex items-center justify-between pt-2 border-t border-border/50">
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <CalendarDays className="h-3.5 w-3.5" />
-                    <span>{turnosTotal} turnos hoy</span>
+                    <span>{turnosTotal} turnos en demo</span>
                   </div>
                   <span className="text-sm text-emerald-600 font-medium">
                     {completados} completados
