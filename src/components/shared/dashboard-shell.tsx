@@ -48,6 +48,7 @@ export function DashboardShell({
           size="icon"
           className="absolute top-4 right-[-44px] bg-background border border-border"
           onClick={() => setSidebarOpen(false)}
+          aria-label="Cerrar menú"
         >
           <X className="h-4 w-4" />
         </Button>
