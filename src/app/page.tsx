@@ -62,7 +62,7 @@ export default function DashboardPage() {
     },
     {
       title: "Ingresos estimados",
-      value: formatCurrency(metricas.ingresos + 15300),
+      value: formatCurrency(metricas.ingresos),
       description: "Turnos completados hoy",
       icon: DollarSign,
       color: "text-emerald-600",
