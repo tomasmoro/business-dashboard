@@ -49,13 +49,15 @@ async function fetchMetricas(negocioId: string): Promise<MetricasOverview> {
       (t.estado === "confirmado" || t.estado === "pendiente")
   );
 
-  const { data: turnosMesData } = await supabase
+  const { data: turnosMesData, error: turnosMesError } = await supabase
     .from("turnos")
     .select("precio_cobrado, servicio:servicios(precio)")
     .eq("negocio_id", negocioId)
     .gte("fecha_hora_inicio", startOfMonth(hoy).toISOString())
     .lte("fecha_hora_inicio", endOfMonth(hoy).toISOString())
     .in("estado", ["completado"]);
+
+  if (turnosMesError) throw turnosMesError;
 
   // Supabase returns joined rows as arrays; cast through unknown to our local type
   type TurnoMesRow = { precio_cobrado: number | null; servicio: { precio: number }[] | null };

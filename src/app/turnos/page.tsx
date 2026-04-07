@@ -32,7 +32,6 @@ const HOURS = Array.from({ length: 13 }, (_, i) => i + 8); // 8:00 - 20:00
 export default function TurnosPage() {
   const [currentWeek, setCurrentWeek] = useState(new Date());
   const [selectedDay, setSelectedDay] = useState(new Date());
-  const [view, setView] = useState<"week" | "day">("day");
 
   const weekStart = startOfWeek(currentWeek, { weekStartsOn: 1 });
   const weekEnd = endOfWeek(currentWeek, { weekStartsOn: 1 });
@@ -67,6 +66,7 @@ export default function TurnosPage() {
                 variant="outline"
                 size="icon"
                 onClick={() => setCurrentWeek(subWeeks(currentWeek, 1))}
+                aria-label="Semana anterior"
               >
                 <ChevronLeft className="h-4 w-4" />
               </Button>
@@ -78,24 +78,9 @@ export default function TurnosPage() {
                 variant="outline"
                 size="icon"
                 onClick={() => setCurrentWeek(addWeeks(currentWeek, 1))}
+                aria-label="Semana siguiente"
               >
                 <ChevronRight className="h-4 w-4" />
-              </Button>
-            </div>
-            <div className="flex gap-2">
-              <Button
-                variant={view === "day" ? "default" : "outline"}
-                size="sm"
-                onClick={() => setView("day")}
-              >
-                Día
-              </Button>
-              <Button
-                variant={view === "week" ? "default" : "outline"}
-                size="sm"
-                onClick={() => setView("week")}
-              >
-                Semana
               </Button>
             </div>
           </div>
