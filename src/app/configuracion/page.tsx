@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import {
   Settings,
   Building2,
@@ -55,6 +56,11 @@ export default function ConfiguracionPage() {
     <DashboardShell
       title="Configuración"
       description="Gestión del negocio y preferencias"
+      actions={
+        <Button asChild variant="outline">
+          <Link href="/configuracion/supabase-test">Probar Supabase</Link>
+        </Button>
+      }
     >
       {/* Plan banner */}
       <Card className="mb-6 bg-gradient-to-r from-indigo-500 to-purple-600 text-white border-0">

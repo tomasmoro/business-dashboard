@@ -99,12 +99,17 @@ export default function DashboardPage() {
         fechaFormateada.charAt(0).toUpperCase() + fechaFormateada.slice(1)
       }
       actions={
-        <Button asChild>
-          <Link href="/turnos">
-            Ver todos los turnos
-            <ArrowRight className="ml-1 h-4 w-4" />
-          </Link>
-        </Button>
+        <>
+          <Button asChild variant="outline">
+            <Link href="/configuracion/supabase-test">Probar Supabase</Link>
+          </Button>
+          <Button asChild>
+            <Link href="/turnos">
+              Ver todos los turnos
+              <ArrowRight className="ml-1 h-4 w-4" />
+            </Link>
+          </Button>
+        </>
       }
     >
       {/* Metric Cards */}
