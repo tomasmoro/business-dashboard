@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/lib/supabase/client";
+import { createClient } from "@/lib/supabase/client";
 import type { Turno, MetricasOverview } from "@/types";
 import {
   startOfDay,
@@ -10,6 +10,7 @@ import {
 } from "date-fns";
 
 async function fetchTurnosHoy(negocioId: string): Promise<Turno[]> {
+  const supabase = createClient();
   const hoy = new Date();
   const { data, error } = await supabase
     .from("turnos")
@@ -31,6 +32,7 @@ async function fetchTurnosHoy(negocioId: string): Promise<Turno[]> {
 }
 
 async function fetchMetricas(negocioId: string): Promise<MetricasOverview> {
+  const supabase = createClient();
   const hoy = new Date();
   const turnosHoy = await fetchTurnosHoy(negocioId);
 
