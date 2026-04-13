@@ -11,10 +11,12 @@ import {
   Settings,
   ChevronRight,
   Sparkles,
+  LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
+import { logoutAction } from "@/app/actions/auth";
 
 const navItems = [
   {
@@ -150,7 +152,7 @@ export function Sidebar({ className }: SidebarProps) {
           })}
         </ul>
 
-        {/* User profile */}
+        {/* User profile + logout */}
         <div className="mt-4 flex items-center gap-3 rounded-lg bg-accent/50 px-3 py-2.5">
           <Avatar className="h-8 w-8">
             <AvatarFallback className="text-xs bg-primary/20 text-primary">
@@ -163,6 +165,16 @@ export function Sidebar({ className }: SidebarProps) {
             </p>
             <p className="truncate text-xs text-muted-foreground">Plan Pro</p>
           </div>
+          <form action={logoutAction}>
+            <button
+              type="submit"
+              title="Cerrar sesión"
+              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+            >
+              <LogOut className="h-4 w-4" />
+              <span className="sr-only">Cerrar sesión</span>
+            </button>
+          </form>
         </div>
       </div>
     </aside>
