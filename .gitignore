@@ -41,4 +41,4 @@ yarn-error.log*
 next-env.d.ts
 
 # MCP local config (contains secrets)
-.vscode/mcp.json
+*.vscode
