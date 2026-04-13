@@ -84,7 +84,7 @@ export default function LoginPage() {
               href="/register"
               className="font-medium text-primary hover:underline"
             >
-              Registrate
+              Registráte
             </Link>
           </p>
         </CardFooter>

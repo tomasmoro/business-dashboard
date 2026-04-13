@@ -9,8 +9,12 @@ export async function login(
   _prevState: AuthActionState,
   formData: FormData
 ): Promise<AuthActionState> {
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
+  const email = formData.get("email");
+  const password = formData.get("password");
+
+  if (!email || !password || typeof email !== "string" || typeof password !== "string") {
+    return { error: "Email y contraseña son requeridos." };
+  }
 
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword({ email, password });
@@ -26,9 +30,18 @@ export async function register(
   _prevState: AuthActionState,
   formData: FormData
 ): Promise<AuthActionState> {
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
-  const confirmPassword = formData.get("confirmPassword") as string;
+  const email = formData.get("email");
+  const password = formData.get("password");
+  const confirmPassword = formData.get("confirmPassword");
+
+  if (
+    !email || !password || !confirmPassword ||
+    typeof email !== "string" ||
+    typeof password !== "string" ||
+    typeof confirmPassword !== "string"
+  ) {
+    return { error: "Todos los campos son requeridos." };
+  }
 
   if (password !== confirmPassword) {
     return { error: "Las contraseñas no coinciden." };
