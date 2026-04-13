@@ -35,18 +35,18 @@ export function EntityActionsMenu({
       <DropdownMenuContent align="end" className="w-44">
         <DropdownMenuItem onSelect={onEdit}>
           <Pencil className="h-4 w-4" />
-          <span>Edit</span>
+          <span>Editar</span>
         </DropdownMenuItem>
         <DropdownMenuItem onSelect={onSetInactive}>
           <UserRoundX className="h-4 w-4" />
-          <span>Set inactive</span>
+          <span>Marcar como inactivo</span>
         </DropdownMenuItem>
         <DropdownMenuItem
           onSelect={onDelete}
           className="text-destructive focus:text-destructive"
         >
           <Trash2 className="h-4 w-4" />
-          <span>Delete</span>
+          <span>Eliminar</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
