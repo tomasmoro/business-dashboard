@@ -294,9 +294,7 @@ export function ServiciosPageClient({
                 </div>
                 <CardTitle className="mt-3 text-base">{servicio.nombre}</CardTitle>
                 <CardDescription className="text-xs">
-                  {servicio.bufferMinutos > 0
-                    ? `Buffer: ${servicio.bufferMinutos} min`
-                    : "Sin buffer adicional"}
+                  Servicio disponible para agendamiento
                 </CardDescription>
               </CardHeader>
               <CardContent className="pt-0">
