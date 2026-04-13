@@ -52,14 +52,28 @@ async function runSupabaseServerCheck() {
       }
     );
 
-    if (restResponse.status === 401 || restResponse.status === 403) {
+    if (!restResponse.ok) {
+      const responseBody = (await restResponse.text()).trim();
+      const responseBodyDetail = responseBody
+        ? `Body: ${responseBody}`
+        : "Body: <vacío>";
+
+      if (restResponse.status === 401 || restResponse.status === 403) {
+        return {
+          ok: false,
+          message: "Token inválido para Supabase.",
+          details: [
+            "Supabase respondió que falta o es inválido el Bearer token.",
+            `HTTP ${restResponse.status}`,
+            responseBodyDetail,
+          ],
+        };
+      }
+
       return {
         ok: false,
-        message: "Token inválido para Supabase.",
-        details: [
-          "Supabase respondió que falta o es inválido el Bearer token.",
-          `HTTP ${restResponse.status}`,
-        ],
+        message: "La validación REST de Supabase falló.",
+        details: [`HTTP ${restResponse.status}`, responseBodyDetail],
       };
     }
 
