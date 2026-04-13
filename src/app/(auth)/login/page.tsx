@@ -1,7 +1,6 @@
 "use client";
 
 import { useActionState } from "react";
-import Link from "next/link";
 import { Sparkles } from "lucide-react";
 import { loginAction, type AuthState } from "@/app/actions/auth";
 import { Button } from "@/components/ui/button";
@@ -10,7 +9,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -78,13 +76,6 @@ export default function LoginPage() {
           </Button>
         </form>
       </CardContent>
-
-      <CardFooter className="justify-center text-sm text-muted-foreground">
-        ¿No tenés cuenta?&nbsp;
-        <Link href="/register" className="font-medium text-primary hover:underline">
-          Registrate
-        </Link>
-      </CardFooter>
     </Card>
   );
 }
