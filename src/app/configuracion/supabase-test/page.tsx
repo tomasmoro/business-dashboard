@@ -15,23 +15,25 @@ export const dynamic = "force-dynamic";
 
 async function runSupabaseServerCheck() {
   const hasUrl = Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL);
-  const hasPublishableKey = Boolean(
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY ||
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  const hasPublishableDefaultKey = Boolean(
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY
   );
+  const hasAnonKey = Boolean(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+  const hasPublicKey = hasPublishableDefaultKey || hasAnonKey;
   const hasServiceRoleKey = Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY);
   const testKey =
     process.env.SUPABASE_SERVICE_ROLE_KEY ||
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY ||
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-  if (!hasUrl || !testKey) {
+  if (!hasUrl || (!hasServiceRoleKey && !hasPublicKey) || !testKey) {
     return {
       ok: false,
       message: "Faltan variables de entorno para Supabase.",
       details: [
         `NEXT_PUBLIC_SUPABASE_URL: ${hasUrl ? "OK" : "MISSING"}`,
-        `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY: ${hasPublishableKey ? "OK" : "MISSING"}`,
+        `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY: ${hasPublishableDefaultKey ? "OK" : "MISSING"}`,
+        `NEXT_PUBLIC_SUPABASE_ANON_KEY: ${hasAnonKey ? "OK" : "MISSING"}`,
         `SUPABASE_SERVICE_ROLE_KEY: ${hasServiceRoleKey ? "OK" : "MISSING"}`,
       ],
     };
