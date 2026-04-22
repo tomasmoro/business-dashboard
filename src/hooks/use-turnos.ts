@@ -43,7 +43,7 @@ export function useTurnosHoy(negocioId?: string) {
   return useQuery({
     queryKey: ["turnos", "hoy", negocioId],
     queryFn: () => fetchTurnosHoy(negocioId),
-    enabled: true,
+    enabled: negocioId !== "",
   });
 }
 
@@ -51,7 +51,7 @@ export function useMetricas(negocioId?: string) {
   return useQuery({
     queryKey: ["metricas", negocioId],
     queryFn: () => fetchMetricas(negocioId),
-    enabled: true,
+    enabled: negocioId !== "",
     refetchInterval: 1000 * 60 * 5,
   });
 }
