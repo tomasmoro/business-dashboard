@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import type { MetricasOverview, Turno } from "@/types";
 
 async function fetchJSON<T>(url: string): Promise<T> {
-  const response = await fetch(url, { cache: "no-store" });
+  const response = await fetch(url);
   if (!response.ok) {
     const payload = (await response.json().catch(() => null)) as
       | { error?: string }

@@ -79,7 +79,7 @@ export async function getMetricasOverview(
     (t) => t.estado === "confirmado" || t.estado === "completado"
   );
   const ingresosEstimadosHoy = turnosConfirmadosHoy.reduce(
-    (sum, t) => sum + Number(t.precio_cobrado ?? t.servicio?.precio ?? 0),
+    (sum, t) => sum + Number(t.precio_cobrado ?? getServicioPrecio(t.servicio)),
     0
   );
   const proximasCitas = turnosHoy
