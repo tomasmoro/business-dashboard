@@ -88,7 +88,7 @@ export default function TurnosPage() {
 
           {/* Day selector */}
           <div className="grid grid-cols-7 gap-1">
-              {weekDays.map((day) => {
+            {weekDays.map((day) => {
               const turnosDayCount = turnosSemana.filter((t) =>
                 isSameDay(new Date(t.fecha_hora_inicio), day)
               ).length;

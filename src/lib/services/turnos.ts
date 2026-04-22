@@ -14,15 +14,17 @@ const TURNOS_SELECT = `
 
 type TurnoMesRow = {
   precio_cobrado: number | null;
-  servicio: { precio: number } | { precio: number }[] | null;
+  servicio: unknown;
 };
 
-function getServicioPrecio(servicio: TurnoMesRow["servicio"]): number {
+function getServicioPrecio(servicio: unknown): number {
   if (Array.isArray(servicio)) {
-    return Number(servicio[0]?.precio ?? 0);
+    const item = servicio[0] as { precio?: number } | undefined;
+    return Number(item?.precio ?? 0);
   }
 
-  return Number(servicio?.precio ?? 0);
+  const item = servicio as { precio?: number } | null;
+  return Number(item?.precio ?? 0);
 }
 
 export type ListTurnosParams = {
