@@ -1,81 +1,42 @@
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/lib/supabase/client";
-import type { Turno, MetricasOverview } from "@/types";
-import {
-  startOfDay,
-  endOfDay,
-  startOfMonth,
-  endOfMonth,
-  isAfter,
-} from "date-fns";
+import type { MetricasOverview, Turno } from "@/types";
+
+async function fetchJSON<T>(url: string): Promise<T> {
+  const response = await fetch(url);
+  if (!response.ok) {
+    const payload = (await response.json().catch(() => null)) as
+      | { error?: string }
+      | null;
+    throw new Error(
+      payload?.error ?? `No se pudo obtener la información (${response.status}).`
+    );
+  }
+
+  return (await response.json()) as T;
+}
 
 async function fetchTurnosHoy(negocioId: string): Promise<Turno[]> {
-  const hoy = new Date();
-  const { data, error } = await supabase
-    .from("turnos")
-    .select(
-      `
-      *,
-      cliente:clientes(*),
-      profesional:profesionales(*),
-      servicio:servicios(*)
-    `
-    )
-    .eq("negocio_id", negocioId)
-    .gte("fecha_hora_inicio", startOfDay(hoy).toISOString())
-    .lte("fecha_hora_inicio", endOfDay(hoy).toISOString())
-    .order("fecha_hora_inicio");
-
-  if (error) throw error;
-  return data as Turno[];
+  const params = new URLSearchParams({ negocioId });
+  return fetchJSON<Turno[]>(`/api/turnos/hoy?${params.toString()}`);
 }
 
 async function fetchMetricas(negocioId: string): Promise<MetricasOverview> {
-  const hoy = new Date();
-  const turnosHoy = await fetchTurnosHoy(negocioId);
+  const params = new URLSearchParams({ negocioId });
+  return fetchJSON<MetricasOverview>(`/api/turnos/metricas?${params.toString()}`);
+}
 
-  const turnosConfirmadosHoy = turnosHoy.filter(
-    (t) => t.estado === "confirmado" || t.estado === "completado"
-  );
+async function fetchTurnosEnRango(
+  start: Date,
+  end: Date,
+  negocioId?: string
+): Promise<Turno[]> {
+  const params = new URLSearchParams({
+    start: start.toISOString(),
+    end: end.toISOString(),
+  });
+  if (negocioId) params.set("negocioId", negocioId);
 
-  const ingresosEstimadosHoy = turnosConfirmadosHoy.reduce(
-    (sum, t) => sum + (t.precio_cobrado ?? t.servicio?.precio ?? 0),
-    0
-  );
-
-  const proximasCitas = turnosHoy.filter(
-    (t) =>
-      isAfter(new Date(t.fecha_hora_inicio), hoy) &&
-      (t.estado === "confirmado" || t.estado === "pendiente")
-  );
-
-  const { data: turnosMesData, error: turnosMesError } = await supabase
-    .from("turnos")
-    .select("precio_cobrado, servicio:servicios(precio)")
-    .eq("negocio_id", negocioId)
-    .gte("fecha_hora_inicio", startOfMonth(hoy).toISOString())
-    .lte("fecha_hora_inicio", endOfMonth(hoy).toISOString())
-    .in("estado", ["completado"]);
-
-  if (turnosMesError) throw turnosMesError;
-
-  // Supabase returns joined rows as arrays; cast through unknown to our local type
-  type TurnoMesRow = { precio_cobrado: number | null; servicio: { precio: number }[] | null };
-
-  const ingresosMes = ((turnosMesData ?? []) as unknown as TurnoMesRow[]).reduce(
-    (sum: number, t: TurnoMesRow) =>
-      sum + (t.precio_cobrado ?? t.servicio?.[0]?.precio ?? 0),
-    0
-  );
-
-  return {
-    turnosHoy: turnosHoy.length,
-    turnosHoyConfirmados: turnosConfirmadosHoy.length,
-    ingresosEstimadosHoy,
-    proximasCitas: proximasCitas.slice(0, 5),
-    turnosMes: turnosMesData?.length ?? 0,
-    ingresosMes,
-  };
+  return fetchJSON<Turno[]>(`/api/turnos?${params.toString()}`);
 }
 
 export function useTurnosHoy(negocioId: string) {
@@ -92,5 +53,12 @@ export function useMetricas(negocioId: string) {
     queryFn: () => fetchMetricas(negocioId),
     enabled: !!negocioId,
     refetchInterval: 1000 * 60 * 5,
+  });
+}
+
+export function useTurnosEnRango(start: Date, end: Date, negocioId?: string) {
+  return useQuery({
+    queryKey: ["turnos", "rango", negocioId, start.toISOString(), end.toISOString()],
+    queryFn: () => fetchTurnosEnRango(start, end, negocioId),
   });
 }
