@@ -25,7 +25,7 @@ import { Button } from "@/components/ui/button";
 import { EstadoBadge } from "@/components/shared/estado-badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn, formatTime } from "@/lib/utils";
-import { mockTurnos } from "@/lib/mock-data";
+import { useTurnosEnRango } from "@/hooks/use-turnos";
 
 const HOURS = Array.from({ length: 13 }, (_, i) => i + 8); // 8:00 - 20:00
 
@@ -36,8 +36,9 @@ export default function TurnosPage() {
   const weekStart = startOfWeek(currentWeek, { weekStartsOn: 1 });
   const weekEnd = endOfWeek(currentWeek, { weekStartsOn: 1 });
   const weekDays = eachDayOfInterval({ start: weekStart, end: weekEnd });
+  const { data: turnosSemana = [] } = useTurnosEnRango(weekStart, weekEnd);
 
-  const turnosDia = mockTurnos.filter((t) =>
+  const turnosDia = turnosSemana.filter((t) =>
     isSameDay(new Date(t.fecha_hora_inicio), selectedDay)
   );
 
@@ -87,8 +88,8 @@ export default function TurnosPage() {
 
           {/* Day selector */}
           <div className="grid grid-cols-7 gap-1">
-            {weekDays.map((day) => {
-              const turnosDayCount = mockTurnos.filter((t) =>
+              {weekDays.map((day) => {
+              const turnosDayCount = turnosSemana.filter((t) =>
                 isSameDay(new Date(t.fecha_hora_inicio), day)
               ).length;
               const isSelected = isSameDay(day, selectedDay);
