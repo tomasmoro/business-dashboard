@@ -14,17 +14,17 @@ const TURNOS_SELECT = `
 
 type TurnoMesRow = {
   precio_cobrado: number | null;
-  servicio: unknown;
+  servicio: ServicioJoin;
 };
 
-function getServicioPrecio(servicio: unknown): number {
+type ServicioJoin = { precio?: number } | { precio?: number }[] | null | undefined;
+
+function getServicioPrecio(servicio: ServicioJoin): number {
   if (Array.isArray(servicio)) {
-    const item = servicio[0] as { precio?: number } | undefined;
-    return Number(item?.precio ?? 0);
+    return Number(servicio[0]?.precio ?? 0);
   }
 
-  const item = servicio as { precio?: number } | null;
-  return Number(item?.precio ?? 0);
+  return Number(servicio?.precio ?? 0);
 }
 
 export type ListTurnosParams = {

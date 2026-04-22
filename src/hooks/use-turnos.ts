@@ -7,7 +7,9 @@ async function fetchJSON<T>(url: string): Promise<T> {
     const payload = (await response.json().catch(() => null)) as
       | { error?: string }
       | null;
-    throw new Error(payload?.error ?? "No se pudo obtener la información.");
+    throw new Error(
+      payload?.error ?? `No se pudo obtener la información (${response.status}).`
+    );
   }
 
   return (await response.json()) as T;
