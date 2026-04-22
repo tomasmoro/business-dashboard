@@ -13,15 +13,13 @@ async function fetchJSON<T>(url: string): Promise<T> {
   return (await response.json()) as T;
 }
 
-async function fetchTurnosHoy(negocioId?: string): Promise<Turno[]> {
-  const params = new URLSearchParams();
-  if (negocioId) params.set("negocioId", negocioId);
+async function fetchTurnosHoy(negocioId: string): Promise<Turno[]> {
+  const params = new URLSearchParams({ negocioId });
   return fetchJSON<Turno[]>(`/api/turnos/hoy?${params.toString()}`);
 }
 
-async function fetchMetricas(negocioId?: string): Promise<MetricasOverview> {
-  const params = new URLSearchParams();
-  if (negocioId) params.set("negocioId", negocioId);
+async function fetchMetricas(negocioId: string): Promise<MetricasOverview> {
+  const params = new URLSearchParams({ negocioId });
   return fetchJSON<MetricasOverview>(`/api/turnos/metricas?${params.toString()}`);
 }
 
@@ -39,19 +37,19 @@ async function fetchTurnosEnRango(
   return fetchJSON<Turno[]>(`/api/turnos?${params.toString()}`);
 }
 
-export function useTurnosHoy(negocioId?: string) {
+export function useTurnosHoy(negocioId: string) {
   return useQuery({
     queryKey: ["turnos", "hoy", negocioId],
     queryFn: () => fetchTurnosHoy(negocioId),
-    enabled: negocioId !== "",
+    enabled: !!negocioId,
   });
 }
 
-export function useMetricas(negocioId?: string) {
+export function useMetricas(negocioId: string) {
   return useQuery({
     queryKey: ["metricas", negocioId],
     queryFn: () => fetchMetricas(negocioId),
-    enabled: negocioId !== "",
+    enabled: !!negocioId,
     refetchInterval: 1000 * 60 * 5,
   });
 }
@@ -60,6 +58,5 @@ export function useTurnosEnRango(start: Date, end: Date, negocioId?: string) {
   return useQuery({
     queryKey: ["turnos", "rango", negocioId, start.toISOString(), end.toISOString()],
     queryFn: () => fetchTurnosEnRango(start, end, negocioId),
-    enabled: !!start && !!end,
   });
 }

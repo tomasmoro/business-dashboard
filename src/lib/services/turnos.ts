@@ -14,8 +14,16 @@ const TURNOS_SELECT = `
 
 type TurnoMesRow = {
   precio_cobrado: number | null;
-  servicio: { precio: number }[] | null;
+  servicio: { precio: number } | { precio: number }[] | null;
 };
+
+function getServicioPrecio(servicio: TurnoMesRow["servicio"]): number {
+  if (Array.isArray(servicio)) {
+    return Number(servicio[0]?.precio ?? 0);
+  }
+
+  return Number(servicio?.precio ?? 0);
+}
 
 export type ListTurnosParams = {
   start?: string;
@@ -98,7 +106,7 @@ export async function getMetricasOverview(
   }
 
   const ingresosMes = ((turnosMesData ?? []) as TurnoMesRow[]).reduce(
-    (sum, t) => sum + Number(t.precio_cobrado ?? t.servicio?.[0]?.precio ?? 0),
+    (sum, t) => sum + Number(t.precio_cobrado ?? getServicioPrecio(t.servicio)),
     0
   );
 
